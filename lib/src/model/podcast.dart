@@ -22,6 +22,7 @@ class Podcast {
   final String image;
   final String copyright;
   final List<Episode> episodes;
+  final String feedContent;
 
   Podcast._(
     this.url, [
@@ -31,6 +32,7 @@ class Podcast {
     this.image,
     this.copyright,
     this.episodes,
+    this.feedContent,
   ]);
 
   static Future<Podcast> loadFeed({
@@ -59,7 +61,8 @@ class Podcast {
 
       _loadEpisodes(rssFeed, episodes);
 
-      return Podcast._(url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, author, episodes);
+      return Podcast._(
+          url, rssFeed.link, rssFeed.title, rssFeed.description, rssFeed.image?.url, author, episodes, response.data);
     } on DioError catch (e) {
       switch (e.type) {
         case DioErrorType.CONNECT_TIMEOUT:
