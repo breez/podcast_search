@@ -48,7 +48,7 @@ class Podcast {
   /// A list of current episodes.
   final List<Episode> episodes;
 
-  Podcast._({
+  Podcast({
     this.url,
     this.link,
     this.title,
@@ -100,7 +100,7 @@ class Podcast {
 
       _loadEpisodes(rssFeed, episodes);
 
-      return Podcast._(
+      return Podcast(
         url: url,
         link: rssFeed.link,
         title: rssFeed.title,
@@ -128,7 +128,7 @@ class Podcast {
       }
     }
 
-    return Podcast._(url: url);
+    return Podcast(url: url);
   }
 
   /// Podcasts that support the newer podcast namespace can include chapter markers. Typically this
