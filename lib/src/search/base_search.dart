@@ -2,7 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:podcast_search/podcast_search.dart';
 
-const podcastSearchAgent = 'podcast_search/0.4.0 https://github.com/amugofjava/anytime_podcast_player';
+const podcastSearchAgent =
+    'podcast_search/0.4.0 https://github.com/amugofjava/anytime_podcast_player';
 
 abstract class BaseSearch {
   /// Contains the type of error returning from the search. If no error occurred it
@@ -12,15 +13,15 @@ abstract class BaseSearch {
   /// If an error occurs, this will contain a user-readable error message.
   String lastError;
 
-  Future<SearchResult> search({
-    @required String term,
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  });
+  Future<SearchResult> search(
+      {@required String term,
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams});
 
   Future<SearchResult> charts();
 
