@@ -59,7 +59,9 @@ class ITunesSearch extends BaseSearch {
             connectTimeout: timeout,
             receiveTimeout: timeout,
             headers: {
-              'User-Agent': userAgent == null || userAgent.isEmpty ? '$podcastSearchAgent' : '${userAgent}',
+              'User-Agent': userAgent == null || userAgent.isEmpty
+                  ? '$podcastSearchAgent'
+                  : '${userAgent}',
             },
           ),
         );
@@ -69,15 +71,15 @@ class ITunesSearch extends BaseSearch {
   /// By default, searches will be based on keywords. Supply an [Attribute]
   /// value to search by a different attribute such as Author, genre etc.
   @override
-  Future<SearchResult> search({
-    String term,
-    Country country,
-    Attribute attribute,
-    Language language,
-    int limit,
-    int version = 0,
-    bool explicit = false,
-  }) async {
+  Future<SearchResult> search(
+      {String term,
+      Country country,
+      Attribute attribute,
+      Language language,
+      int limit,
+      int version = 0,
+      bool explicit = false,
+      Map<String, dynamic> queryParams = const {}}) async {
     _term = term;
     _country = country;
     _attribute = attribute;
@@ -87,7 +89,7 @@ class ITunesSearch extends BaseSearch {
     _explicit = explicit;
 
     try {
-      final response = await _client.get(_buildSearchUrl());
+      final response = await _client.get(_buildSearchUrl(queryParams));
 
       final results = json.decode(response.data);
 
@@ -145,7 +147,8 @@ class ITunesSearch extends BaseSearch {
         for (var entry in entries) {
           var id = entry['id']['attributes']['im:id'];
 
-          final response = await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
+          final response =
+              await _client.get(FEED_API_ENDPOINT + '/lookup?id=$id');
           final results = json.decode(response.data);
 
           if (results['results'] != null) {
@@ -166,7 +169,7 @@ class ITunesSearch extends BaseSearch {
 
   /// This internal method constructs a correctly encoded URL which is then
   /// used to perform the search.
-  String _buildSearchUrl() {
+  String _buildSearchUrl(Map<String, dynamic> queryParams) {
     final buf = StringBuffer(SEARCH_API_ENDPOINT);
 
     buf.write(_termParam());
@@ -177,6 +180,9 @@ class ITunesSearch extends BaseSearch {
     buf.write(_versionParam());
     buf.write(_explicitParam());
     buf.write(_standardParam());
+    queryParams.forEach((key, value) {
+      buf.write('&$key=${Uri.encodeComponent(value)}');
+    });
 
     return buf.toString();
   }
@@ -202,7 +208,9 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _termParam() {
-    return term != null && term.isNotEmpty ? '?term=' + Uri.encodeComponent(term) : '';
+    return term != null && term.isNotEmpty
+        ? '?term=' + Uri.encodeComponent(term)
+        : '';
   }
 
   String _countryParam() {
@@ -210,7 +218,9 @@ class ITunesSearch extends BaseSearch {
   }
 
   String _attributeParam() {
-    return _attribute != null ? '&attribute=' + Uri.encodeComponent(_attribute.attribute) : '';
+    return _attribute != null
+        ? '&attribute=' + Uri.encodeComponent(_attribute.attribute)
+        : '';
   }
 
   String _limitParam() {
